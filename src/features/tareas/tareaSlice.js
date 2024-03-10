@@ -28,6 +28,19 @@ export const crearTarea = createAsyncThunk(
   }
 );
 
+export const getTareas = createAsyncThunk("tareas/get", async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await tareaService.getTareas(token);
+  } catch (error) {
+    const message =
+      (error.response && error.response.data && error.response.data.message) ||
+      error.message ||
+      error.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
+
 export const tareaSlice = createSlice({
   name: "tarea",
   initialState,
@@ -45,6 +58,19 @@ export const tareaSlice = createSlice({
         state.tareas.push(action.payload);
       })
       .addCase(crearTarea.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(getTareas.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getTareas.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.tareas = action.payload;
+      })
+      .addCase(getTareas.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
