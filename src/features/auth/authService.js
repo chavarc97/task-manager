@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://courageous-duck-top-coat.cyclic.app/api/users/";
+const API_URL = "https://zany-rose-meerkat-tie.cyclic.app/api/users/";
 
 // create backend petition to register a new user
 const register = async (userData) => {
